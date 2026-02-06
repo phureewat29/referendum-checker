@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { validateThaiId } from "@/lib/thai-id-validator";
+import { ResultCard } from "@/components/ResultCard";
+import { StatusBanner } from "@/components/StatusBanner";
 
 interface ElectionResult {
   source: string;
@@ -10,31 +13,22 @@ interface ElectionResult {
   district?: string;
   subdistrict?: string;
   pollingStation?: string;
+  hasEarlyVoted?: boolean;
+  earlyVoteInfo?: any;
   error?: string;
   rawData?: any;
+}
+
+interface Results {
+  election?: ElectionResult;
+  electionPm?: ElectionResult;
 }
 
 export default function Home() {
   const [thaiId, setThaiId] = useState("");
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<{
-    election?: ElectionResult;
-    electionPm?: ElectionResult;
-  }>({});
+  const [results, setResults] = useState<Results>({});
   const [comparison, setComparison] = useState<string>("");
-
-  const validateThaiId = (id: string): boolean => {
-    if (id.length !== 13) return false;
-    if (!/^\d+$/.test(id)) return false;
-
-    // Thai ID checksum validation
-    let sum = 0;
-    for (let i = 0; i < 12; i++) {
-      sum += parseInt(id.charAt(i)) * (13 - i);
-    }
-    const checkDigit = (11 - (sum % 11)) % 10;
-    return checkDigit === parseInt(id.charAt(12));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,14 +89,23 @@ export default function Home() {
     }
   };
 
+  const hasEarlyVoted =
+    results.election?.hasEarlyVoted || results.electionPm?.hasEarlyVoted;
+
+  const getComparisonType = () => {
+    if (comparison.includes("✓")) return "match";
+    if (comparison.includes("✗")) return "mismatch";
+    return "warning";
+  };
+
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
+        <header className="text-center mb-8">
           <h1 className="text-2xl font-light text-white mb-2">
             ตรวจสอบเขตเลือกตั้งและประชามติ
           </h1>
-        </div>
+        </header>
 
         <form onSubmit={handleSubmit} className="mb-6">
           <input
@@ -129,130 +132,24 @@ export default function Home() {
           </button>
         </form>
 
-        {comparison && (
-          <div
-            className={`text-center py-3 px-4 rounded-lg mb-6 ${
-              comparison.includes("✓")
-                ? "bg-green-900/30 border border-green-800 text-green-400"
-                : comparison.includes("✗")
-                  ? "bg-red-600 border border-red-700 text-white"
-                  : "bg-yellow-900/30 border border-yellow-800 text-yellow-400"
-            }`}
-          >
-            <p className="font-medium">{comparison}</p>
-          </div>
+        {hasEarlyVoted ? (
+          <StatusBanner
+            type="early-vote"
+            message="คุณลงทะเบียนเลือกตั้งล่วงหน้า"
+          />
+        ) : (
+          comparison && (
+            <StatusBanner type={getComparisonType()} message={comparison} />
+          )
         )}
 
         {(results.election || results.electionPm) && (
           <div className="space-y-4">
             {results.election && (
-              <div className="border border-gray-800 rounded-lg p-4">
-                <h2 className="text-gray-500 text-xs uppercase mb-3">สส.</h2>
-                {results.election.error ? (
-                  <p className="text-red-400 text-sm">
-                    {results.election.error}
-                  </p>
-                ) : (
-                  <div className="space-y-2 text-white text-sm">
-                    {results.election.location && (
-                      <div className="mb-3 pb-3 border-b border-gray-700">
-                        <div className="text-gray-500 text-xs mb-1">
-                          สถานที่เลือกตั้ง:
-                        </div>
-                        <div className="text-white text-sm">
-                          {results.election.location}
-                        </div>
-                      </div>
-                    )}
-                    {results.election.province && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">จังหวัด:</span>
-                        <span>{results.election.province}</span>
-                      </div>
-                    )}
-                    {results.election.district && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">อำเภอ:</span>
-                        <span>{results.election.district}</span>
-                      </div>
-                    )}
-                    {results.election.subdistrict && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">ตำบล:</span>
-                        <span>{results.election.subdistrict}</span>
-                      </div>
-                    )}
-                    {results.election.region && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">เขต:</span>
-                        <span>{results.election.region}</span>
-                      </div>
-                    )}
-                    {results.election.pollingStation && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">หน่วย:</span>
-                        <span>{results.election.pollingStation}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+              <ResultCard title="สส." result={results.election} />
             )}
-
             {results.electionPm && (
-              <div className="border border-gray-800 rounded-lg p-4">
-                <h2 className="text-gray-500 text-xs uppercase mb-3">
-                  ประชามติ
-                </h2>
-                {results.electionPm.error ? (
-                  <p className="text-red-400 text-sm">
-                    {results.electionPm.error}
-                  </p>
-                ) : (
-                  <div className="space-y-2 text-white text-sm">
-                    {results.electionPm.location && (
-                      <div className="mb-3 pb-3 border-b border-gray-700">
-                        <div className="text-gray-500 text-xs mb-1">
-                          สถานที่เลือกตั้ง:
-                        </div>
-                        <div className="text-white text-sm">
-                          {results.electionPm.location}
-                        </div>
-                      </div>
-                    )}
-                    {results.electionPm.province && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">จังหวัด:</span>
-                        <span>{results.electionPm.province}</span>
-                      </div>
-                    )}
-                    {results.electionPm.district && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">อำเภอ:</span>
-                        <span>{results.electionPm.district}</span>
-                      </div>
-                    )}
-                    {results.electionPm.subdistrict && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">ตำบล:</span>
-                        <span>{results.electionPm.subdistrict}</span>
-                      </div>
-                    )}
-                    {results.electionPm.region && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">เขต:</span>
-                        <span>{results.electionPm.region}</span>
-                      </div>
-                    )}
-                    {results.electionPm.pollingStation && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">หน่วย:</span>
-                        <span>{results.electionPm.pollingStation}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+              <ResultCard title="ประชามติ" result={results.electionPm} />
             )}
           </div>
         )}
