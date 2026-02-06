@@ -18,6 +18,12 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.svg",
   },
+  themeColor: "#000000",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+  },
   openGraph: {
     title: "ตรวจสอบเขตเลือกตั้งและประชามติ",
     description: "ตรวจสอบเขตเลือกตั้งและประชามติ",
@@ -38,9 +44,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="th">
+    <html lang="th" className="bg-black">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
       >
         {children}
       </body>
