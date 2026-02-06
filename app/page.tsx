@@ -100,9 +100,8 @@ export default function Home() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-light text-white mb-2">
-            ตรวจสอบเขตเลือกตั้ง
+            ตรวจสอบเขตเลือกตั้งและประชามติ
           </h1>
-          <p className="text-gray-400 text-sm">Thai Election Checker</p>
         </div>
 
         <form onSubmit={handleSubmit} className="mb-6">
@@ -157,8 +156,12 @@ export default function Home() {
                   <div className="space-y-2 text-white text-sm">
                     {results.election.location && (
                       <div className="mb-3 pb-3 border-b border-gray-700">
-                        <div className="text-gray-500 text-xs mb-1">สถานที่เลือกตั้ง:</div>
-                        <div className="text-white text-sm">{results.election.location}</div>
+                        <div className="text-gray-500 text-xs mb-1">
+                          สถานที่เลือกตั้ง:
+                        </div>
+                        <div className="text-white text-sm">
+                          {results.election.location}
+                        </div>
                       </div>
                     )}
                     {results.election.province && (
@@ -209,8 +212,12 @@ export default function Home() {
                   <div className="space-y-2 text-white text-sm">
                     {results.electionPm.location && (
                       <div className="mb-3 pb-3 border-b border-gray-700">
-                        <div className="text-gray-500 text-xs mb-1">สถานที่เลือกตั้ง:</div>
-                        <div className="text-white text-sm">{results.electionPm.location}</div>
+                        <div className="text-gray-500 text-xs mb-1">
+                          สถานที่เลือกตั้ง:
+                        </div>
+                        <div className="text-white text-sm">
+                          {results.electionPm.location}
+                        </div>
                       </div>
                     )}
                     {results.electionPm.province && (
