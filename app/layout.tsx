@@ -21,14 +21,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ตรวจสอบเขตเลือกตั้งและประชามติ",
     description: "ตรวจสอบเขตเลือกตั้งและประชามติ",
-    images: ["/og-image.svg"],
+    images: ["/og-image.png"],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "ตรวจสอบเขตเลือกตั้งและประชามติ",
     description: "ตรวจสอบเขตเลือกตั้งและประชามติ",
-    images: ["/og-image.svg"],
+    images: ["/og-image.png"],
   },
 };
 
