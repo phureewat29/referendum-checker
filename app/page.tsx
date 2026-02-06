@@ -136,7 +136,7 @@ export default function Home() {
               comparison.includes("✓")
                 ? "bg-green-900/30 border border-green-800 text-green-400"
                 : comparison.includes("✗")
-                  ? "bg-red-900/30 border border-red-800 text-red-400"
+                  ? "bg-red-600 border border-red-700 text-white"
                   : "bg-yellow-900/30 border border-yellow-800 text-yellow-400"
             }`}
           >
@@ -155,6 +155,12 @@ export default function Home() {
                   </p>
                 ) : (
                   <div className="space-y-2 text-white text-sm">
+                    {results.election.location && (
+                      <div className="mb-3 pb-3 border-b border-gray-700">
+                        <div className="text-gray-500 text-xs mb-1">สถานที่เลือกตั้ง:</div>
+                        <div className="text-white text-sm">{results.election.location}</div>
+                      </div>
+                    )}
                     {results.election.province && (
                       <div className="flex justify-between">
                         <span className="text-gray-500">จังหวัด:</span>
@@ -201,6 +207,12 @@ export default function Home() {
                   </p>
                 ) : (
                   <div className="space-y-2 text-white text-sm">
+                    {results.electionPm.location && (
+                      <div className="mb-3 pb-3 border-b border-gray-700">
+                        <div className="text-gray-500 text-xs mb-1">สถานที่เลือกตั้ง:</div>
+                        <div className="text-white text-sm">{results.electionPm.location}</div>
+                      </div>
+                    )}
                     {results.electionPm.province && (
                       <div className="flex justify-between">
                         <span className="text-gray-500">จังหวัด:</span>

@@ -13,8 +13,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ตรวจสอบเขตเลือกตั้ง",
-  description: "Thai Election Checker",
+  title: "ตรวจสอบเขตเลือกตั้งและประชามติ",
+  description: "ตรวจสอบเขตเลือกตั้งและประชามติ",
+  icons: {
+    icon: "/favicon.svg",
+  },
+  openGraph: {
+    title: "ตรวจสอบเขตเลือกตั้งและประชามติ",
+    description: "ตรวจสอบเขตเลือกตั้งและประชามติ",
+    images: ["/og-image.svg"],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ตรวจสอบเขตเลือกตั้งและประชามติ",
+    description: "ตรวจสอบเขตเลือกตั้งและประชามติ",
+    images: ["/og-image.svg"],
+  },
 };
 
 export default function RootLayout({
